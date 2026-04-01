@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edital Verticalizado Inteligente</title>
+    <meta name="description" content="Converta PDF ou texto em edital verticalizado para concursos, vestibulares e exames." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="pill">MVP para GitHub Pages</span>
+          <h1>Edital Verticalizado Inteligente</h1>
+          <p class="lead">Suba um PDF, cole o texto do edital ou informe uma URL pública para gerar um edital verticalizado/esquematizado com checklist de estudo.</p>
+          <div class="hero-actions">
+            <a href="#gerador" class="button primary">Gerar agora</a>
+            <button id="loadSample" class="button ghost">Carregar exemplo ALECE</button>
+          </div>
+          <div class="meta-line">Build: __BUILD_DATE__</div>
+        </div>
+        <div class="hero-card">
+          <img src="./assets/hero.svg" alt="Exemplo visual de tabela verticalizada" />
+        </div>
+      </div>
+    </header>
+
+    <main class="container stack-xl">
+      <section class="grid-3 stats">
+        <article class="stat-card"><strong>1</strong><span>Organiza tópicos e subtópicos por disciplina</span></article>
+        <article class="stat-card"><strong>2</strong><span>Gera visão simples ou completa com colunas de acompanhamento</span></article>
+        <article class="stat-card"><strong>3</strong><span>Exporta CSV, JSON, Markdown e impressão em PDF</span></article>
+      </section>
+
+      <section id="gerador" class="panel stack-lg">
+        <div class="section-head">
+          <div>
+            <h2>Gerador</h2>
+            <p>Funciona melhor com editais em texto ou PDFs digitais. PDFs escaneados podem exigir OCR em uma próxima versão.</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="stack-md">
+            <label class="label">Modo de saída</label>
+            <div class="segmented">
+              <label><input type="radio" name="mode" value="simple" checked /> Simples</label>
+              <label><input type="radio" name="mode" value="complete" /> Completo</label>
+            </div>
+
+            <label class="label">Cargo / recorte desejado</label>
+            <input id="jobFilter" class="input" list="aleceCargoList" placeholder="Ex.: Analista Legislativo – Direito, Técnico Legislativo" />
+            <datalist id="aleceCargoList">
+              <option value="Analista Legislativo – Administração"></option>
+              <option value="Analista Legislativo – Arquitetura e Urbanismo"></option>
+              <option value="Analista Legislativo – Biblioteconomia"></option>
+              <option value="Analista Legislativo – Ciências Contábeis"></option>
+              <option value="Analista Legislativo – Ciências Econômicas"></option>
+              <option value="Analista Legislativo – Consultoria Técnica Legislativa"></option>
+              <option value="Analista Legislativo – Controle Interno"></option>
+              <option value="Analista Legislativo – Design Gráfico"></option>
+              <option value="Analista Legislativo – Direito"></option>
+              <option value="Analista Legislativo – Engenharia Civil"></option>
+              <option value="Analista Legislativo – Engenharia Elétrica"></option>
+              <option value="Analista Legislativo – Informática"></option>
+              <option value="Analista Legislativo – Jornalismo"></option>
+              <option value="Analista Legislativo – Língua Portuguesa"></option>
+              <option value="Analista Legislativo – Psicologia"></option>
+              <option value="Analista Legislativo – Publicidade e Propaganda"></option>
+              <option value="Técnico Legislativo"></option>
+            </datalist>
+            <div class="meta-line">Na v4, o parser da ALECE usa este campo para recortar o cargo certo.</div>
+
+            <label class="label">Observações para o parser</label>
+            <input id="notes" class="input" placeholder="Ex.: priorizar conteúdos específicos, separar subtópicos, foco Cebraspe" />
+          </div>
+
+          <div class="stack-md">
+            <label class="label">Upload do PDF</label>
+            <input id="pdfInput" class="input" type="file" accept="application/pdf" />
+
+            <label class="label">Ou informe a URL pública do edital</label>
+            <div class="inline-row">
+              <input id="urlInput" class="input" placeholder="https://.../edital.pdf" />
+              <button id="fetchUrl" class="button secondary">Buscar</button>
+            </div>
+
+            <label class="label">Ou cole o texto do edital</label>
+            <textarea id="rawText" class="textarea" rows="10" placeholder="Cole aqui o conteúdo do edital..."></textarea>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button id="generateBtn" class="button primary">Gerar edital verticalizado</button>
+          <button id="clearBtn" class="button ghost">Limpar</button>
+          <button id="printBtn" class="button secondary">Imprimir / PDF</button>
+        </div>
+
+        <div id="status" class="status">Aguardando entrada.</div>
+      </section>
+
+      <section id="resultSection" class="stack-xl hidden">
+        <section class="panel stack-md">
+          <div class="section-head">
+            <div>
+              <h2>Visão geral</h2>
+              <p>Resumo rápido do edital processado.</p>
+            </div>
+            <div class="inline-row wrap">
+              <button id="exportCsv" class="button ghost">Exportar CSV</button>
+              <button id="exportJson" class="button ghost">Exportar JSON</button>
+              <button id="exportMd" class="button ghost">Exportar Markdown</button>
+            </div>
+          </div>
+          <div id="overviewCards" class="grid-4"></div>
+        </section>
+
+        <section class="panel stack-md">
+          <h2>Disciplinas detectadas</h2>
+          <div id="disciplineCards" class="grid-3"></div>
+        </section>
+
+        <section class="panel stack-md">
+          <h2>Tabela verticalizada</h2>
+          <div class="table-wrap">
+            <table id="outputTable">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <p>Projeto pronto para repositório público + GitHub Actions + GitHub Pages. v4 com recorte por cargo da ALECE.</p>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
