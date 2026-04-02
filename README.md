@@ -6,14 +6,15 @@ Aplicação estática pronta para GitHub Pages que transforma um edital em um **
 
 - aceita **PDF enviado pelo usuário**;
 - aceita **texto colado**;
-- tenta ler **URL pública** do edital (quando o servidor permitir CORS);
+- tenta ler **URL pública** do edital, quando o servidor permitir CORS;
 - organiza o conteúdo em:
   - visão geral do concurso;
   - quadro por disciplinas;
   - tabela verticalizada de tópicos e subtópicos;
   - checklist de estudo, revisão e observações;
 - exporta em **CSV**, **JSON** e **Markdown**;
-- permite **impressão em PDF** pelo navegador.
+- permite **impressão em PDF** pelo navegador;
+- possui **recorte por cargo da ALECE**, com preset validado para **Analista Legislativo – Direito**.
 
 ## Stack
 
@@ -37,13 +38,24 @@ Aplicação estática pronta para GitHub Pages que transforma um edital em um **
 │       └── hero.svg
 ├── scripts/
 │   └── build.mjs
-└── package.json
+├── package.json
+└── package-lock.json
 ```
+
+## Revisão aplicada nesta versão
+
+- workflow simplificado para GitHub Pages, sem etapa desnecessária de instalação de dependências;
+- validação de sintaxe antes do build com `npm run validate`;
+- geração automática de `.nojekyll` no `dist/`;
+- manutenção de caminhos relativos para funcionar em repositório do tipo `username.github.io/repositorio`;
+- parser com foco em ALECE por cargo;
+- aviso quando o PDF parece corrompido;
+- preset mais confiável para **Analista Legislativo – Direito**.
 
 ## Rodando localmente
 
 ```bash
-npm install
+npm run validate
 npm run build
 npm run preview
 ```
@@ -70,19 +82,20 @@ npm run dev
 3. Define o modo:
    - **Simples**: só verticaliza.
    - **Completo**: adiciona colunas de estudo e revisão.
-4. Clica em **Gerar edital verticalizado**.
-5. Exporta ou imprime.
+4. Preenche o **cargo/recorte desejado** quando o edital for da ALECE.
+5. Clica em **Gerar edital verticalizado**.
+6. Exporta ou imprime.
 
 ## Observações importantes
 
 - URLs de PDF podem falhar por bloqueio de CORS do site de origem.
-- Em repositórios públicos, o GitHub Pages com Actions é suficiente para este MVP.
-- A extração é heurística: alguns editais exigirão ajustes finos nas regras de parsing.
+- PDFs escaneados ou com texto mal codificado podem exigir OCR em uma evolução futura.
+- A extração ainda é heurística: alguns editais exigirão ajustes finos nas regras de parsing.
 
 ## Próximas evoluções
 
 - OCR para PDFs escaneados;
-- perfis por banca (Cebraspe, FCC, FGV, Cesgranrio etc.);
+- presets detalhados para mais cargos da ALECE;
+- perfis por banca, como Cebraspe, FCC, FGV e Cesgranrio;
 - modo IA para resumir tópicos e sugerir ciclos de revisão;
-- login e histórico do usuário;
 - ranking de incidência por assunto com base em provas anteriores.
